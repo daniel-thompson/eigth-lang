@@ -1,0 +1,260 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+define
+	test	r7
+	use	r0
+begin
+	mov	r0, 0x2e
+	putc	r0
+end
+
+
+###########
+test	  1	# Verify bit patterns
+###########
+
+# pattern - set the working registers to useful bit patterns
+define
+	pattern
+begin
+	add	r0,  0, 0x00000001
+	or	r1, r0, 0x0000007e
+	add	r2, r1, 0x00000080
+	add	r4, r2, 0x0000ff01
+	shra	r3, r4, 1
+	shl	r5, r3, 2
+	or	r7, r0, 0xffffffff
+	shr	r6, r7, 1
+end
+
+pattern
+assert  r0, 0x00000001
+assert  r1, 0x0000007f
+assert  r2, 0x000000ff
+assert  r3, 0x00008000
+assert  r4, 0x00010000
+assert  r5, 0x00020000
+assert  r6, 0x7fffffff
+assert  r7, 0xffffffff
+
+
+###########
+test	  2	# Check all registers can be zeroed
+###########
+
+# zero - set the working registers to zero
+#
+# This word does not have any clobbers (since we don't want the
+# registers to be restored afterwards)
+define
+	zero
+begin
+	mov	r0, 0
+	mov	r1, 0
+	mov	r2, 0
+	mov	r3, 0
+	mov	r4, 0
+	mov	r5, 0
+	mov	r6, 0
+	mov	r7, 0
+end
+
+zero
+assert	r0, 0
+assert	r1, 0
+assert	r2, 0
+assert	r3, 0
+assert	r4, 0
+assert	r5, 0
+assert	r6, 0
+assert	r7, 0
+
+
+###########
+test	  3	# Define a "normal" three-operand opcode
+###########
+
+define
+	bitset	r0, r1, r2
+	use	r3
+begin
+	shl	r3, 1, r2
+	or	r0, r1, r3
+end
+
+zero
+mov	r4, 0x0208
+bitset	r5, r4, 6
+bitset	r6, r5, 12
+assert	r0, 0
+assert	r1, 0
+assert	r2, 0
+assert	r3, 0
+assert	r4, 0x0208
+assert	r5, 0x0248
+assert	r6, 0x1248
+assert	r7, 0
+
+
+###########
+test	  4	# Test comment handling works properly
+###########
+
+# Test
+  # comment
+	# handling
+add	r1, 1, 1 # works
+assert	r1, 2		# properly
+
+
+###########
+test	  5	# Simple logical and arithmetic shift tests
+###########
+
+shr	r1, 0x87654321, 16
+assert	r1, 0x8765
+shr	r2, 0x76543210, 24
+assert	r2, 0x76
+shra	r3, 0x87654321, 16
+assert	r3, 0xffff8765
+shra	r4, 0x76543210, 24
+assert	r4, 0x76
+
+
+###########
+test	  6	# Simple conditional branch
+###########
+
+define
+	ifthen	r0, r1, r2
+begin
+  mov r0, 0
+	if	r1
+		mov	r0, r2
+	end
+end
+
+pattern
+ifthen r7, r1, 0xc0ffee
+assert r7, 0xc0ffee
+ifthen r6, 0, 0xc0ffee
+assert r6, 0
+
+
+###########
+test	  7	# if-else conditional branches
+###########
+
+define
+  ifelse r0, r1, r2, r3
+begin
+  if r1
+    mov r0, r2
+  else
+    mov r0, r3
+  end
+end
+
+pattern
+ifelse r7, r1, 0xc0ffee, 0xdead
+assert r7, 0xc0ffee
+ifelse r7, 0 0xc0ffee, 0xdead
+assert r7, 0xdead
+
+
+###########
+test	  8	# Nest conditional branches
+###########
+
+define
+  ifnext r0, r1, r2
+begin
+  mov r0, 5
+  if r1
+    mov r0, 4
+    if r1
+      mov r0, 3
+      if r1
+        mov r0, r2
+      else
+        mov r0, 2
+      end
+    else
+      mov r0, 1
+    end
+  else
+    mov r0, 0
+  end
+end
+
+pattern
+ifnext r7, r1, 0xc0ffee
+assert r7, 0xc0ffee
+ifnext r6, 0, 0xc0ffee
+assert r6, 0
+
+
+###########
+test	  9	# While loop
+###########
+
+define
+  dec r0, r1
+begin
+  mov r0, r1
+  while r1
+    sub r1, r1, 1
+    add r0, r0, 1
+  end
+end
+
+dec r0, 10
+assert r0, 20
+
+
+###########
+test	 10	# == conditions
+###########
+
+define
+  if== r0, r1, r2
+begin
+  if r1 == r2
+    mov r0, 1
+  else
+    mov r0, 2
+  end
+end
+
+if==  r7, 1, 1
+assert  r7, 1
+if==  r7, 1, 2
+assert  r7, 2
+
+
+###########
+test	 11	# != conditions
+###########
+
+define
+  if!= r0, r1, r2
+begin
+  if r1 != r2
+    mov r0, 1
+  else
+    mov r0, 2
+  end
+end
+
+if!=  r7, 1, 1
+assert  r7, 2
+if!=  r7, 1, 2
+assert  r7, 1
+
+
+###########
+test	999	# End the program
+###########
+
+mov	r0, 0x0a
+putc	r0
