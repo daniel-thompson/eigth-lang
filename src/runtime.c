@@ -1,5 +1,11 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
+/*
+ * This file contains Linux-specific mmap flags that are disabled
+ * due to the -std=c99 we use for the rest of the project.
+ */
+#define _DEFAULT_SOURCE
+
 #include "eigth.h"
 #include <sys/mman.h>
 
