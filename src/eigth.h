@@ -119,6 +119,7 @@ struct symbol *symtab_latest(void);
 void symtab_list(FILE *f);
 struct symbol *symtab_lookup(const char *name);
 const char *symtab_name(reg_t addr);
+reg_t op_us(reg_t _);
 
 void dbg_optype(FILE *f, enum optype t);
 void dbg_operand(FILE *f, struct operand *op);

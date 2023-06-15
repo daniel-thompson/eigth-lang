@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+define
+  fib r1, r0
+  use r2, r3
+begin
+  mov r1, 1
+  mov r2, 1
+  while r0
+    mov r3, r2
+    mov r2, r1
+    add r1, r2, r3
+    sub r0, r0, 1
+  end
+end
+
+fib r0, 10
+assert r0, 144
+us  r1
+fib r0, 10000000
+us  r2
+sub r1, r2, r1
+print r1

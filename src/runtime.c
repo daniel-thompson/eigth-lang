@@ -7,6 +7,7 @@
 #define _DEFAULT_SOURCE
 
 #include "eigth.h"
+#include <time.h>
 #include <sys/mman.h>
 
 enum delimiter {
@@ -461,6 +462,16 @@ const char *symtab_name(reg_t addr)
 			return s->name;
 
 	return NULL;
+}
+
+reg_t op_us(reg_t _)
+{
+	struct timespec tv;
+
+	int res = clock_gettime(CLOCK_MONOTONIC, &tv);
+	assert(0 == res);
+
+	return (reg_t) ((tv.tv_nsec / 1000) + 1000000 * tv.tv_sec);
 }
 
 int main(int argc, char *argv[])

@@ -159,6 +159,7 @@ void register_ops(void)
 	OP(shr);
 	OP(shra);
 	OP(sub);
+	OP(us);
 	OP(while); IMM;
 	OP(words);
 	OP(xor);
