@@ -38,6 +38,11 @@ static reg_t op_disassemble(void)
 	return 0;
 }
 
+static reg_t op_div(reg_t _, reg_t a, reg_t b)
+{
+	return (sreg_t) a / (sreg_t) b;
+}
+
 static reg_t op_dump(void)
 {
 	dbg_regs(stdout);
@@ -65,6 +70,11 @@ static reg_t op_if(reg_t cond)
 static reg_t op_mov(reg_t _, reg_t a)
 {
 	return a;
+}
+
+static reg_t op_mul(reg_t _, reg_t a, reg_t b)
+{
+	return (sreg_t) a * (sreg_t) b;
 }
 
 static reg_t op_or(reg_t _, reg_t a, reg_t b)
@@ -147,11 +157,13 @@ void register_ops(void)
 	OP(and);
 	OP(define); IMM;
 	OP(disassemble); IMM;
+	OP(div);
 	OP(dump);
 	OP(exit);
 	OP(hex);
 	OP(if); IMM;
 	OP(mov);
+	OP(mul);
 	OP(or);
 	OP(print);
 	OP(putc);

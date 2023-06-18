@@ -16,6 +16,7 @@
 #define lengthof(x) ((sizeof(x) / sizeof(*(x))))
 
 typedef uint32_t reg_t;
+typedef int32_t sreg_t;
 
 struct regset {
 	reg_t r[8];
