@@ -14,10 +14,36 @@ begin
   end
 end
 
+define
+  bench r0
+begin
+  mov r3, 50
+  mov r0, 0
+
+  # Pre-heat the caches
+  fib r4, 1000000
+
+  while r3
+    us  r1
+    fib r4, 500000
+    us  r2
+    sub r1, r2, r1
+
+    mov r4, 0x2e
+    putc  r4
+
+    add r0, r0, r1
+    sub r3, r3, 1
+  end
+
+  mov r4, 0x0a
+  putc  r4
+
+  div r0, r0, 50
+end
+
 fib r0, 10
 assert r0, 144
-us  r1
-fib r0, 10000000
-us  r2
-sub r1, r2, r1
-print r1
+
+bench r0
+print r0
