@@ -95,6 +95,10 @@ void dbg_symtype(FILE *f, enum symtype t)
 
 static void dbgi_symbol(FILE *f, struct symbol *s)
 {
+	if (!s) {
+		fprintf(f, "NULL");
+		return;
+	}
 	fprintf(f, "{ \"%s\", ", s->name);
 	dbgi_symtype(f, s->type);
 	fprintf(f, ", 0x%x, %p }", s->val, s->next);

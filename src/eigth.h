@@ -125,6 +125,7 @@ reg_t op_us(reg_t _);
 void dbg_optype(FILE *f, enum optype t);
 void dbg_operand(FILE *f, struct operand *op);
 void dbg_command(FILE *f, struct command *c);
+void dbg_symbol(FILE *f, struct symbol *s);
 void dbg_reg(FILE *f, reg_t reg);
 void dbg_reg_array(FILE *f, int nelem, reg_t *regs);
 void dbg_regset(FILE *f, struct regset *regs);
