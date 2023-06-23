@@ -389,6 +389,13 @@ void parse_if(void)
 
 }
 
+void parse_var(void)
+{
+	// this is a sneaky trick to capture a name and a number
+	struct command cmd = parse_command();
+	dbg_command(stderr, &cmd);
+}
+
 void parse_while(void)
 {
 

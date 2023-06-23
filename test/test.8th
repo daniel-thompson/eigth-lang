@@ -128,7 +128,7 @@ test	  6	# Simple conditional branch
 define
 	ifthen	r0, r1, r2
 begin
-  mov r0, 0
+	mov r0, 0
 	if	r1
 		mov	r0, r2
 	end
@@ -146,52 +146,52 @@ test	  7	# if-else conditional branches
 ###########
 
 define
-  ifelse r0, r1, r2, r3
+	ifelse	r0, r1, r2, r3
 begin
-  if r1
-    mov r0, r2
-  else
-    mov r0, r3
-  end
+	if r1
+		mov	r0, r2
+	else
+		mov	r0, r3
+	end
 end
 
 pattern
-ifelse r7, r1, 0xc0ffee, 0xdead
-assert r7, 0xc0ffee
-ifelse r7, 0 0xc0ffee, 0xdead
-assert r7, 0xdead
+ifelse	r7, r1, 0xc0ffee, 0xdead
+assert	r7, 0xc0ffee
+ifelse	r7, 0 0xc0ffee, 0xdead
+assert	r7, 0xdead
 
 
 ###########
-test	  8	# Nest conditional branches
+test	  8	# Nested conditional branches
 ###########
 
 define
-  ifnext r0, r1, r2
+	ifnext	r0, r1, r2
 begin
-  mov r0, 5
-  if r1
-    mov r0, 4
-    if r1
-      mov r0, 3
-      if r1
-        mov r0, r2
-      else
-        mov r0, 2
-      end
-    else
-      mov r0, 1
-    end
-  else
-    mov r0, 0
-  end
+	mov	r0, 5
+	if r1
+		mov	r0, 4
+		if r1
+			mov	r0, 3
+			if r1
+				mov	r0, r2
+			else
+				mov	r0, 2
+			end
+		else
+			mov	r0, 1
+		end
+	else
+		mov	r0, 0
+	end
 end
 
 pattern
-ifnext r7, r1, 0xc0ffee
-assert r7, 0xc0ffee
-ifnext r6, 0, 0xc0ffee
-assert r6, 0
+ifnext	r7, r1, 0xc0ffee
+assert	r7, 0xc0ffee
+ifnext	r6, 0, 0xc0ffee
+assert	r6, 0
 
 
 ###########
@@ -226,10 +226,10 @@ begin
   end
 end
 
-if==  r7, 1, 1
-assert  r7, 1
-if==  r7, 1, 2
-assert  r7, 2
+if==	r7, 1, 1
+assert	r7, 1
+if==	r7, 1, 2
+assert	r7, 2
 
 
 ###########
@@ -237,19 +237,42 @@ test	 11	# != conditions
 ###########
 
 define
-  if!= r0, r1, r2
+	if!= r0, r1, r2
 begin
-  if r1 != r2
-    mov r0, 1
-  else
-    mov r0, 2
-  end
+	if r1 != r2
+		mov r0, 1
+	else
+		mov r0, 2
+	end
 end
 
-if!=  r7, 1, 1
-assert  r7, 2
-if!=  r7, 1, 2
-assert  r7, 1
+if!=	r7, 1, 1
+assert	r7, 2
+if!=	r7, 1, 2
+assert	r7, 1
+
+
+###########
+test	 12	# variables
+###########
+
+zero
+var	pi 3
+string	s "oOo"
+
+pi	r0
+assert	r0, 3
+
+&pi r0
+ldw r0, r0, 0
+pi r1
+assert r0, r1
+
+s	r0
+s	r1
+assert	r0, r1
+
+puts r0
 
 
 ###########

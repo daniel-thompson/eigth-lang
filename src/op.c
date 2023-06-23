@@ -96,6 +96,13 @@ static reg_t op_putc(reg_t a)
 	return a;
 }
 
+static reg_t op_puts(reg_t a)
+{
+	puts((char *) (uintptr_t) a);
+
+	return a;
+}
+
 static reg_t op_shl(reg_t _, reg_t a, reg_t b)
 {
 	return a << b;
@@ -121,6 +128,12 @@ static reg_t op_shra(reg_t _, reg_t a, reg_t b)
 static reg_t op_sub(reg_t _, reg_t a, reg_t b)
 {
 	return a - b;
+}
+
+static reg_t op_var(void)
+{
+	parse_var();
+	return 0;
 }
 
 static reg_t op_while(reg_t cond)
@@ -167,14 +180,15 @@ void register_ops(void)
 	OP(or);
 	OP(print);
 	OP(putc);
+	OP(puts);
 	OP(shl);
 	OP(shr);
 	OP(shra);
 	OP(sub);
 	OP(us);
+	OP(var); IMM;
 	OP(while); IMM;
 	OP(words);
-	OP(xor);
 	OP(xor);
 
 #undef OP

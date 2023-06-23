@@ -7,7 +7,7 @@ HDRS = $(wildcard src/*.h)
 OBJS = $(SRCS:.c=.o)
 
 CC = clang
-CFLAGS = -std=c99 -g -O2 -Wall
+CFLAGS = -std=c99 -g -O0 -Wall
 
 eigth : $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
