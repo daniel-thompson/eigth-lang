@@ -15,8 +15,10 @@ eigth : $(OBJS)
 bench : eigth
 	./eigth < examples/benchmark.8th
 
-check : eigth
+test : eigth
 	./eigth < test/test.8th
+
+check : test bench
 
 clean :
 	$(RM) eigth $(OBJS)
