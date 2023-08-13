@@ -317,15 +317,7 @@ void parse_define(void)
 	// allocate the space for the freshly assembled function!
 	memp = /*(reg_t) (uintptr_t)*/ ip;
 
-	size_t namelen = strlen(cmd.opcode) + 1;
-	char *name = alloc(namelen);
-	memcpy(name, cmd.opcode, namelen);
-
-	struct symbol *s = alloc(sizeof(struct symbol));
-	s->name = name;
-	s->type = EXECPTR;
-	s->val = (reg_t) (uintptr_t) p;
-	symtab_add(s);
+	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
 }
 
 enum relop parse_relop(const char *t)
@@ -462,6 +454,21 @@ const char *symtab_name(reg_t addr)
 			return s->name;
 
 	return NULL;
+}
+
+struct symbol *symtab_new(const char *name, enum symtype type, reg_t val)
+{
+	size_t namelen = strlen(name) + 1;
+	char *namemem = alloc(namelen);
+	memcpy(namemem, name, namelen);
+
+	struct symbol *s = alloc(sizeof(struct symbol));
+	s->name = namemem;
+	s->type = type;
+	s->val = val;;
+	symtab_add(s);
+
+	return s;
 }
 
 reg_t op_us(reg_t _)

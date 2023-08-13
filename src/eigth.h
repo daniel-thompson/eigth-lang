@@ -120,6 +120,7 @@ struct symbol *symtab_latest(void);
 void symtab_list(FILE *f);
 struct symbol *symtab_lookup(const char *name);
 const char *symtab_name(reg_t addr);
+struct symbol *symtab_new(const char *name, enum symtype type, reg_t val);
 reg_t op_us(reg_t _);
 
 void dbg_optype(FILE *f, enum optype t);
