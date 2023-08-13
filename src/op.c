@@ -175,7 +175,6 @@ void register_ops(void)
 	OP(while); IMM;
 	OP(words);
 	OP(xor);
-	OP(xor);
 
 #undef OP
 #undef IMM
