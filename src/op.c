@@ -67,6 +67,12 @@ static reg_t op_if(reg_t cond)
 	return cond;
 }
 
+static reg_t op_ldw(reg_t _, reg_t a)
+{
+	reg_t *p = (reg_t *) (uintptr_t) a;
+	return *p;
+}
+
 static reg_t op_mov(reg_t _, reg_t a)
 {
 	return a;
@@ -123,6 +129,12 @@ static reg_t op_sub(reg_t _, reg_t a, reg_t b)
 	return a - b;
 }
 
+static reg_t op_var(void)
+{
+	parse_var();
+	return 0;
+}
+
 static reg_t op_while(reg_t cond)
 {
 	parse_while();
@@ -162,6 +174,7 @@ void register_ops(void)
 	OP(exit);
 	OP(hex);
 	OP(if); IMM;
+	OP(ldw);
 	OP(mov);
 	OP(mul);
 	OP(or);
@@ -172,6 +185,7 @@ void register_ops(void)
 	OP(shra);
 	OP(sub);
 	OP(us);
+	OP(var); IMM;
 	OP(while); IMM;
 	OP(words);
 	OP(xor);

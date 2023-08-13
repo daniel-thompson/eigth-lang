@@ -112,6 +112,7 @@ void *alloc(size_t sz);
 void die(const char *fmt, ...);
 void parse_define(void);
 void parse_if(void);
+void parse_var(void);
 void parse_while(void);
 void symtab_add(struct symbol *s);
 void symtab_define(void);

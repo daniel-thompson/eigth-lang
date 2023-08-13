@@ -253,6 +253,22 @@ assert	r7, 1
 
 
 ###########
+test	 12	# variables
+###########
+
+zero
+var	pi 3
+
+pi	r0
+assert	r0, 3
+
+&pi r0
+ldw r0, r0, 0
+pi r1
+assert r0, r1
+
+
+###########
 test	999	# End the program
 ###########
 

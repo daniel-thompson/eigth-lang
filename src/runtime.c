@@ -381,6 +381,57 @@ void parse_if(void)
 
 }
 
+void parse_var(void)
+{
+	// a command is not expected right now, instead this is just a sneaky
+	// bit of code reuse to collect a name and number from the input.
+	struct command cmd = parse_command();
+	// TODO: error checking...
+
+	reg_t *r = alloc(4);
+	*r = cmd.operand[0].value;
+
+	struct command mov = {
+		.opcode = "mov",
+		.sym = symtab_lookup("mov"),
+		.operand = {
+			{ REGISTER, /* arg0 */ 8 },
+			{ IMMEDIATE, (reg_t) (uintptr_t) r },
+		}
+	};
+	struct command ldw = {
+		.opcode = "ldw",
+		.sym = symtab_lookup("ldw"),
+		.operand = {
+			{ REGISTER, /* arg0 */ 8 },
+			{ REGISTER, /* arg0 */ 8 },
+			{ IMMEDIATE, 0 },
+		}
+	};
+
+	reg_t *p;
+
+	// TODO: symtab_new_start() and symtab_new_finalize() would be a better
+	//       interface?
+	p = ip = memp;
+	ip = assemble_word(ip, &mov);
+	ip = assemble_word(ip, &ldw);
+	ip = assemble_ret(ip);
+	memp = ip;
+	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
+
+	/* prefix the symbol with & */
+	memmove(cmd.opcode+1, cmd.opcode, sizeof(cmd.opcode)-2);
+	cmd.opcode[0] = '&';
+	cmd.opcode[sizeof(cmd.opcode)-1] = '\0';
+
+	p = ip = memp;
+	ip = assemble_word(ip, &mov);
+	ip = assemble_ret(ip);
+	memp = ip;
+	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
+}
+
 void parse_while(void)
 {
 
