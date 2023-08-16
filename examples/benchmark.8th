@@ -17,7 +17,7 @@ end
 define
   bench r0
 begin
-  mov r3, 50
+  mov r3, 10
   mov r0, 0
 
   # Pre-heat the caches
@@ -39,7 +39,7 @@ begin
   mov r4, 0x0a
   putc  r4
 
-  div r0, r0, 50
+  div r0, r0, 10
 end
 
 fib r0, 10
