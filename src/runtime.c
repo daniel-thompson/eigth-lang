@@ -47,7 +47,7 @@ void *alloc(size_t sz)
 
 static reg_t* alloc_memp()
 {
-	void *p = mmap((void *)0x10000000, memsz,
+	void *p = mmap((void *)0x04000000, memsz,
 		       PROT_EXEC | PROT_READ | PROT_WRITE,
 		       MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1,
 		       0);
@@ -283,8 +283,9 @@ enum delimiter parse_block(void)
 		if (c.sym->type == WORDPTR) {
 			// execute the word immediately
 			reg_t *word = ooip;
+			ooip = assemble_preamble(ooip, NULL, 0);
 			ooip = assemble_word(ooip, &c);
-			ooip = assemble_ret(ooip);
+			ooip = assemble_postamble(ooip, NULL, 0);
 			CHECK_OOB_CANARY();
 			exec(word);
 		} else {
@@ -414,9 +415,10 @@ void parse_var(void)
 	// TODO: symtab_new_start() and symtab_new_finalize() would be a better
 	//       interface?
 	p = ip = memp;
+	ip = assemble_preamble(ip, NULL, 0);
 	ip = assemble_word(ip, &mov);
 	ip = assemble_word(ip, &ldw);
-	ip = assemble_ret(ip);
+	ip = assemble_postamble(ip, NULL, 0);
 	memp = ip;
 	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
 
@@ -426,8 +428,9 @@ void parse_var(void)
 	cmd.opcode[sizeof(cmd.opcode)-1] = '\0';
 
 	p = ip = memp;
+	ip = assemble_preamble(ip, NULL, 0);
 	ip = assemble_word(ip, &mov);
-	ip = assemble_ret(ip);
+	ip = assemble_postamble(ip, NULL, 0);
 	memp = ip;
 	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
 }
@@ -553,8 +556,9 @@ int main(int argc, char *argv[])
 
 		struct command cmd = parse_command();
 		if (cmd.sym) {
-			ooip = assemble_word(oob, &cmd);
-			ooip = assemble_ret(ooip);
+			ooip = assemble_preamble(oob, NULL, 0);
+			ooip = assemble_word(ooip, &cmd);
+			ooip = assemble_postamble(ooip, NULL, 0);
 
 			CHECK_OOB_CANARY();
 			exec(oob);

@@ -3,11 +3,15 @@
 all : eigth
 
 SRCS = $(wildcard src/*.c)
+ifdef A64
+SRCS := $(subst src/vm.c,src/arm/a64.c,$(SRCS))
+endif
+
 HDRS = $(wildcard src/*.h)
 OBJS = $(SRCS:.c=.o)
 
 CC = gcc
-CFLAGS = -std=c99 -g -O2 -Wall
+CFLAGS = -std=c99 -g -O2 -Wall -Isrc/ -fno-PIE
 
 # eigth makes the assumptions that pointers to symbols provided by the
 # application sit below the 32-bit boundary (so we can store function
