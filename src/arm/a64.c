@@ -222,21 +222,34 @@ reg_t *assemble_ret(reg_t *ip)
 	return ip;
 }
 
-reg_t *assemble_preamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
+static reg_t get_frame_size(struct command *cmd, uint8_t *clobbers)
 {
 	// add the arguments to the clobber list
 	for (int i = 0; cmd && i < lengthof(cmd->operand) &&
 			cmd->operand[i].type == REGISTER;
 	     i++)
-		clobbers |= 1 << cmd->operand[i].value;
+		*clobbers |= 1 << cmd->operand[i].value;
 
-	// save the state we are about to clobber
-	for (int i = 0; i < 8; i++)
-		if (clobbers & (1 << i))
-			*ip++ = OP_STR_PRE_W(REG(i), XSP, -16);
+	reg_t frame_size = 16 + 4 * __builtin_popcount(*clobbers);
+	// align up to a 16-byte boundary
+	frame_size = ((frame_size - 1) | 15) + 1;
+
+	return frame_size;
+}
+
+reg_t *assemble_preamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
+{
+	reg_t frame_size = get_frame_size(cmd, &clobbers);
 
 	// push a frame record for the called function
-	*ip++ = OP_STP_PRE_X(XFP, XLR, XSP, -2);
+	*ip++ = OP_STP_PRE_X(XFP, XLR, XSP, -(frame_size / 8));
+
+	// save the state we are about to clobber
+	int j = 0;
+	for (int i = 0; i < 8; i++)
+		if (clobbers & (1 << i))
+			*ip++ = OP_STR_OFFSET_W(REG(i), XSP, 4 + j++);
+
 	*ip++ = OP_MOV_SP(XFP, XSP);
 
 	// move the arguments into the right registers
@@ -250,23 +263,21 @@ reg_t *assemble_preamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 
 reg_t *assemble_postamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 {
-	// add the arguments to the clobber list
-	for (int i = 0; cmd && i < lengthof(cmd->operand) &&
-			cmd->operand[i].type == REGISTER;
-	     i++)
-		clobbers |= 1 << cmd->operand[i].value;
+	reg_t frame_size = get_frame_size(cmd, &clobbers);
 
 	// set the return value
 	if (cmd && cmd->operand[0].type == REGISTER)
 		*ip++ = OP_MOV_REG_W(ARG(0), REG(cmd->operand[0].value));
 
-	// pop the frame record
-	*ip++ = OP_LDP_POST_X(XFP, XLR, XSP, 2);
-
 	// restore the saved registers
-	for (int i = 7; i >= 0; i--)
+	int j = 0;
+	for (int i = 0; i < 8; i++)
 		if (clobbers & (1 << i))
-			*ip++ = OP_LDR_POST_W(REG(i), XSP, 16);
+			*ip++ = OP_LDR_OFFSET_W(REG(i), XSP, 4 + j++);
+
+	// pop the frame record
+	*ip++ = OP_LDP_POST_X(XFP, XLR, XSP, (frame_size / 8));
+
 
 	return assemble_ret(ip);
 }
