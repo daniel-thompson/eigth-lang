@@ -352,22 +352,23 @@ static struct regset regs;
 
 void exec(reg_t *ip)
 {
-	__asm__ __volatile__ (
-		"mov	x27, %0\n\t"
-		"ldp	x19, x20, [x27, 0]\n\t"
-		"ldp	x21, x22, [x27, 16]\n\t"
-		"ldp	x23, x24, [x27, 32]\n\t"
-		"ldp	x25, x26, [x27, 48]\n\t"
-		"blr	%1\n\t"
-		"stp	x19, x20, [x27, 0]\n\t"
-		"stp	x21, x22, [x27, 16]\n\t"
-		"stp	x23, x24, [x27, 32]\n\t"
-		"stp	x25, x26, [x27, 48]"
-	:
-	: "r" (&regs), "r" (ip)
-	: "r19", "r20", "r21", "r22", "r23", "r24", "r25", "r26",
-	  "r27", "r30", "cc", "memory"
-	);
+	__asm__ __volatile__("mov	x27, %0\n\t"
+			     "ldp	w19, w20, [x27, 0]\n\t"
+			     "ldp	w21, w22, [x27, 8]\n\t"
+			     "ldp	w23, w24, [x27, 16]\n\t"
+			     "ldp	w25, w26, [x27, 24]\n\t"
+			     "blr	%1\n\t"
+			     "stp	w19, w20, [x27, 0]\n\t"
+			     "stp	w21, w22, [x27, 8]\n\t"
+			     "stp	w23, w24, [x27, 16]\n\t"
+			     "stp	w25, w26, [x27, 24]\n\t"
+			     :
+			     : "r"(&regs), "r"(ip)
+			     : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7",
+			       "r8", "r9", "r10", "r11", "r12", "r13", "r14",
+			       "r15", "r16", "r17", "r19", "r20", "r21",
+			       "r22", "r23", "r24", "r25", "r26", "r27", "r30",
+			       "cc", "memory");
 }
 
 
