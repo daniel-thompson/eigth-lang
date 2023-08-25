@@ -2,14 +2,6 @@
 
 all : eigth
 
-SRCS = $(wildcard src/*.c)
-ifdef A64
-SRCS := $(subst src/vm.c,src/arm/a64.c,$(SRCS))
-endif
-
-HDRS = $(wildcard src/*.h)
-OBJS = $(SRCS:.c=.o)
-
 CC = gcc
 CFLAGS = -std=c99 -g -O2 -Wall -Isrc/ -fno-PIE
 
@@ -18,6 +10,21 @@ CFLAGS = -std=c99 -g -O2 -Wall -Isrc/ -fno-PIE
 # pointers in a 32-bit eigth word). Linking as a position independent
 # executable will break that assumption!
 LDFLAGS = -no-pie $(EXTRA_LDFLAGS)
+
+# Automatically enable native codegen for applicable hosts
+ifeq ($(shell uname -m)-$(CC),aarch64-gcc)
+A64=1
+endif
+
+SRCS = $(wildcard src/*.c)
+ifdef A64
+SRCS := $(subst src/vm.c,src/arm/a64.c,$(SRCS))
+endif
+
+HDRS = $(wildcard src/*.h)
+OBJS = $(SRCS:.c=.o)
+
+
 
 eigth : $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
