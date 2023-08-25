@@ -574,7 +574,7 @@ int main(int argc, char *argv[])
 			sync_caches(oob, ooip);
 			exec(oob);
 		} else {
-			fprintf(stderr, "Bad symbol\n");
+			fprintf(stderr, "Bad symbol: %s\n", cmd.opcode);
 		}
 	}
 
