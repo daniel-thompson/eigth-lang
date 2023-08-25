@@ -36,6 +36,11 @@ static struct symbol *globals = NULL;
 
 const static unsigned int memsz = 4 * 1024 * 1024;
 
+static inline void sync_caches(void *begin, void *end)
+{
+	__builtin___clear_cache((char *) 0x04000000, (char *) 0x04000000 + memsz);
+}
+
 void *alloc(size_t sz)
 {
 	reg_t *p = (reg_t *) (uintptr_t) memp;
@@ -286,7 +291,9 @@ enum delimiter parse_block(void)
 			ooip = assemble_preamble(ooip, NULL, 0);
 			ooip = assemble_word(ooip, &c);
 			ooip = assemble_postamble(ooip, NULL, 0);
+
 			CHECK_OOB_CANARY();
+			sync_caches(word, ooip);
 			exec(word);
 		} else {
 			ip = assemble_word(ip, &c);
@@ -314,6 +321,7 @@ void parse_define(void)
 	ip = assemble_preamble(ip, &cmd, clobbers);
 	(void) parse_block();
 	ip = assemble_postamble(ip, &cmd, clobbers);
+	sync_caches(p, ip);
 
 	// allocate the space for the freshly assembled function!
 	memp = /*(reg_t) (uintptr_t)*/ ip;
@@ -419,6 +427,7 @@ void parse_var(void)
 	ip = assemble_word(ip, &mov);
 	ip = assemble_word(ip, &ldw);
 	ip = assemble_postamble(ip, NULL, 0);
+	sync_caches(p, ip);
 	memp = ip;
 	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
 
@@ -431,6 +440,7 @@ void parse_var(void)
 	ip = assemble_preamble(ip, NULL, 0);
 	ip = assemble_word(ip, &mov);
 	ip = assemble_postamble(ip, NULL, 0);
+	sync_caches(p, ip);
 	memp = ip;
 	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
 }
@@ -561,6 +571,7 @@ int main(int argc, char *argv[])
 			ooip = assemble_postamble(ooip, NULL, 0);
 
 			CHECK_OOB_CANARY();
+			sync_caches(oob, ooip);
 			exec(oob);
 		} else {
 			fprintf(stderr, "Bad symbol\n");
