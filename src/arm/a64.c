@@ -233,7 +233,7 @@ reg_t *assemble_preamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 	// save the state we are about to clobber
 	for (int i = 0; i < 8; i++)
 		if (clobbers & (1 << i))
-			*ip++ = OP_STR_PRE_W(REG(i), XSP, -8);
+			*ip++ = OP_STR_PRE_W(REG(i), XSP, -16);
 
 	// push a frame record for the called function
 	*ip++ = OP_STP_PRE_X(XFP, XLR, XSP, -2);
@@ -266,7 +266,7 @@ reg_t *assemble_postamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 	// restore the saved registers
 	for (int i = 7; i >= 0; i--)
 		if (clobbers & (1 << i))
-			*ip++ = OP_LDR_POST_W(REG(i), XSP, 8);
+			*ip++ = OP_LDR_POST_W(REG(i), XSP, 16);
 
 	return assemble_ret(ip);
 }
