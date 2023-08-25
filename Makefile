@@ -17,7 +17,7 @@ CFLAGS = -std=c99 -g -O2 -Wall -Isrc/ -fno-PIE
 # application sit below the 32-bit boundary (so we can store function
 # pointers in a 32-bit eigth word). Linking as a position independent
 # executable will break that assumption!
-LDFLAGS = -no-pie
+LDFLAGS = -no-pie $(EXTRA_LDFLAGS)
 
 eigth : $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS)
