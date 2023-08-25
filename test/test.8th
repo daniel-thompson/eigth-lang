@@ -2,10 +2,13 @@
 
 define
 	test	r7
-	use	r0
 begin
-	mov	r0, 0x2e
-	putc	r0
+	putc	'T'
+	putc	'e'
+	putc	's'
+	putc	't'
+	putc	32
+	print	r7
 end
 
 
@@ -28,6 +31,7 @@ begin
 end
 
 pattern
+
 assert  r0, 0x00000001
 assert  r1, 0x0000007f
 assert  r2, 0x000000ff
@@ -266,11 +270,3 @@ assert	r0, 3
 ldw r0, r0, 0
 pi r1
 assert r0, r1
-
-
-###########
-test	999	# End the program
-###########
-
-mov	r0, 0x0a
-putc	r0
