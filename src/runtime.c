@@ -193,6 +193,24 @@ static struct operand parse_operand(char *p)
 			op.type = ARGUMENT;
 			op.value = n;
 		}
+	} else if (starts_with(p, "'") && p[1] != '\0' && p[2] == '\'') {
+		op.type = IMMEDIATE;
+		op.value = p[1];
+	} else if (starts_with(p, "'\\") && p[2] != '\0' && p[3] == '\'') {
+		op.type = IMMEDIATE;
+		switch (p[2]) {
+		case 'n':
+			op.value = '\n';
+			break;
+		case 'r':
+			op.value = '\r';
+			break;
+		case 't':
+			op.value = '\t';
+			break;
+		default:
+			op.value = p[2];
+		}
 	} else if (isdigit(p[0])) {
 		op.type = IMMEDIATE;
 		op.value = parse_number(p);
