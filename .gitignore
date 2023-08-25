@@ -1,3 +1,4 @@
 eigth
-src/*.o
+*.o
 *.swp
+attic/
