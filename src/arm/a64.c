@@ -372,14 +372,28 @@ void exec(reg_t *ip)
 }
 
 
+/*!
+ * \brief Get 'current' registers
+ *
+ * This is used by the dump opcode.
+ *
+ * \todo This implementation uses a potentially stale copy of the registers
+ *       made when we called exec(). In practice this means we can only use
+ *       the `dump` opcode from the top level (it won't work inside function)
+ */
 struct regset get_regs()
 {
-	fprintf(stderr, "TODO: Cannot get register values yet\n");
 	assert(regs.zero == 0);
 	return regs;
 }
 
+/*!
+ * \brief Allow the caller to overrider the default stack pointer
+ *
+ * \todo Not implemented. We will crash if eigth code tries to take
+ *       a pointer to stack allocated data (since stack is above 32-bit
+ *       boundary). Happily at present this isn't supported...
+ */
 void set_sp(reg_t sp)
 {
-	fprintf(stderr, "TODO: Cannot set sp\n");
 }
