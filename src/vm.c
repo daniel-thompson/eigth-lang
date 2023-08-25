@@ -181,8 +181,8 @@ reg_t *assemble_ret(reg_t *ip)
 reg_t *assemble_preamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 {
 	// add the arguments to the clobber list
-	for (int i = 0;
-	     i < lengthof(cmd->operand) && cmd->operand[i].type == REGISTER;
+	for (int i = 0; cmd && i < lengthof(cmd->operand) &&
+			cmd->operand[i].type == REGISTER;
 	     i++)
 		clobbers |= 1 << cmd->operand[i].value;
 
@@ -192,8 +192,8 @@ reg_t *assemble_preamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 			*ip++ = ASM_PUSH(i);
 
 	// move the arguments into the right registers
-	for (int i = 0;
-	     i < lengthof(cmd->operand) && cmd->operand[i].type == REGISTER;
+	for (int i = 0; cmd && i < lengthof(cmd->operand) &&
+			cmd->operand[i].type == REGISTER;
 	     i++)
 		*ip++ = ASM_MOV(cmd->operand[i].value, ARG(i));
 
@@ -203,13 +203,13 @@ reg_t *assemble_preamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 reg_t *assemble_postamble(reg_t *ip, struct command *cmd, uint8_t clobbers)
 {
 	// add the arguments to the clobber list
-	for (int i = 0;
-	     i < lengthof(cmd->operand) && cmd->operand[i].type == REGISTER;
+	for (int i = 0; cmd && i < lengthof(cmd->operand) &&
+			cmd->operand[i].type == REGISTER;
 	     i++)
 		clobbers |= 1 << cmd->operand[i].value;
 
 	// set the return value
-	if (cmd->operand[0].type == REGISTER)
+	if (cmd && cmd->operand[0].type == REGISTER)
 		*ip++ = ASM_MOV(ARG(0), cmd->operand[0].value);
 
 	// restore the saved registers
