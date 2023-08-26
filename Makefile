@@ -2,7 +2,7 @@
 
 all : eigth
 
-CC = gcc
+CC ?= gcc
 CFLAGS = -std=c99 -g -O2 -Wall -Isrc/ -fno-PIE
 
 # eigth makes the assumptions that pointers to symbols provided by the
