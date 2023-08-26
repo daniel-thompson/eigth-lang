@@ -1,9 +1,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+const QUIET 1
+
 define
 	test	r7
 begin
-  if 1
+  if QUIET
     putc  '.'
   else
 	  putc	'T'
@@ -18,7 +20,7 @@ end
 define
   exit  r0
 begin
-  if 1
+  if QUIET
     putc  '\n'
   end
   # We can use the old defintion of exit as part of the new
@@ -376,7 +378,25 @@ assert r0, r1
 
 
 ###########
-test	 17	# exit (and symbol re-definition, see definition of exit at top)
+test	 17	# modifying variables
+###########
+
+# TODO
+
+
+###########
+test	 18	# const values
+###########
+
+const SPACE 32
+mov r0, SPACE
+assert r0, 32
+
+# TODO
+
+
+###########
+test	 19	# exit (and symbol re-definition, see definition of exit at top)
 ###########
 
 exit  0

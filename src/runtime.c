@@ -214,6 +214,12 @@ static struct operand parse_operand(char *p)
 	} else if (isdigit(p[0])) {
 		op.type = IMMEDIATE;
 		op.value = parse_number(p);
+	} else {
+		struct symbol *sym = symtab_lookup(p);
+		if (sym && sym->type == CONSTANT) {
+			op.type = IMMEDIATE;
+			op.value = sym->val;
+		}
 	}
 
 	return op;
@@ -430,6 +436,17 @@ void parse_if(void)
 	fixup_if(ip, fixme);
 
 }
+
+void parse_const(void)
+{
+	// a command is not expected right now, instead this is just a sneaky
+	// bit of code reuse to collect a name and number from the input.
+	struct command cmd = parse_command();
+	// TODO: error checking...
+
+	(void) symtab_new(cmd.opcode, CONSTANT, cmd.operand[0].value);
+}
+
 
 void parse_var(void)
 {

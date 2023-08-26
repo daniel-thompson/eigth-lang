@@ -25,6 +25,11 @@ static reg_t op_assert(reg_t a, reg_t b)
 	return a;
 }
 
+static reg_t op_const(void)
+{
+	parse_const();
+	return 0;
+}
 
 static reg_t op_define(void)
 {
@@ -167,6 +172,7 @@ void register_ops(void)
 	OP(alloc);
 	OP(assert);
 	OP(and);
+	OP(const); IMM;
 	OP(define); IMM;
 	OP(disassemble); IMM;
 	OP(div);

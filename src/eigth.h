@@ -110,6 +110,7 @@ void register_ops(void);
 
 void *alloc(size_t sz);
 void die(const char *fmt, ...);
+void parse_const(void);
 void parse_define(void);
 void parse_if(void);
 void parse_var(void);
