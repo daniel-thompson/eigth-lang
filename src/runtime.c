@@ -390,11 +390,34 @@ struct compare parse_comparison(void)
 	return cmp;
 }
 
+void parse_const_if(reg_t condition)
+{
+	reg_t *oip = ip;
+
+	enum delimiter delim = parse_block();
+	if (condition && delim == ELSE) {
+		oip = ip;
+		(void) parse_block();
+		ip = oip;
+	} else if (delim == ELSE) {
+		ip = oip;
+		(void) parse_block();
+	} else if (!condition) {
+		// rewind everything (this is an `if 0` used to comment out
+		// a block of code)
+		ip = oip;
+	}
+
+}
+
 void parse_if(void)
 {
 	struct compare cmp = parse_comparison();
-	if (cmp.op1.type != REGISTER)
+	if (cmp.op1.type == IMMEDIATE) {
+		return parse_const_if(cmp.op1.value);
+	} else if (cmp.op1.type != REGISTER) {
 		return parse_error();
+	}
 
 	reg_t *fixme;
 
