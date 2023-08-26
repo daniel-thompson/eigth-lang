@@ -76,90 +76,90 @@ enum condition_codes {
 };
 
 #define OP_ADD_IMM_W(Rt, Rn, imm12) \
-	(0x11000000 | bits(imm12, 12, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x11000000 | bits((imm12), 12, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_ADD_IMM_X(Rt, Rn, imm12) \
-	(0x91000000 | bits(imm12, 12, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x91000000 | bits((imm12), 12, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_B(offset) \
-	(0x14000000 | bits(offset, 26, 0))
+	(0x14000000 | bits((offset), 26, 0))
 #define OP_B_COND(cond, offset) \
-	(0x54000000 | bits(offset, 19, 5) | bits(cond, 4, 0))
+	(0x54000000 | bits((offset), 19, 5) | bits((cond), 4, 0))
 #define OP_BL(offset) \
-	(0x94000000 | bits(offset, 26, 0))
-#define OP_CMP_REG_W(Rn, Rm) OP_SUBS_REG_W(WZR, Rn, Rm)
-#define OP_CMP_REG_X(Rn, Rm) OP_SUBS_REG_X(XZR, Rn, Rm)
+	(0x94000000 | bits((offset), 26, 0))
+#define OP_CMP_REG_W(Rn, Rm) OP_SUBS_REG_W(WZR, (Rn), (Rm))
+#define OP_CMP_REG_X(Rn, Rm) OP_SUBS_REG_X(XZR, (Rn), (Rm))
 #define OP_LDP_POST_W(Rt, Rt2, Rn, imm7) \
-	(0x28c00000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x28c00000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDP_POST_X(Rt, Rt2, Rn, imm7) \
-	(0xa8c00000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xa8c00000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDP_PRE_W(Rt, Rt2, Rn, imm7) \
-	(0x29c00000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x29c00000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDP_PRE_X(Rt, Rt2, Rn, imm7) \
-	(0xa9c00000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xa9c00000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDP_OFFSET_W(Rt, Rt2, Rn, imm7) \
-	(0x29400000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x29400000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDP_OFFSET_X(Rt, Rt2, Rn, imm7) \
-	(0xa9400000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xa9400000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDR_POST_W(Rt, Rn, imm9) \
-	(0xb8400400 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xb8400400 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDR_POST_X(Rt, Rn, imm9) \
-	(0xf8400400 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xf8400400 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDR_PRE_W(Rt, Rn, imm9) \
-	(0xb8400c00 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xb8400c00 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDR_PRE_X(Rt, Rn, imm9) \
-	(0xf8400c00 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xf8400c00 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDR_OFFSET_W(Rt, Rn, imm12) \
-	(0xb9400000 | bits(imm12, 12, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xb9400000 | bits((imm12), 12, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_LDR_OFFSET_X(Rt, Rn, imm12) \
-	(0xf9400000 | bits(imm12, 12, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
-#define OP_MOV_SP(Rd, Rn) OP_ADD_IMM_X(Rd, Rn, 0)
+	(0xf9400000 | bits((imm12), 12, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
+#define OP_MOV_SP(Rd, Rn) OP_ADD_IMM_X(Rd, (Rn), 0)
 #define OP_MOV_IMM_W(Rd, imm16) OP_MOVZ_W(Rd, imm16, 0)
 #define OP_MOV_IMM_X(Rd, imm16) OP_MOVZ_X(Rd, imm16, 0)
-#define OP_MOV_REG_W(Rd, Rn) OP_ORR_REG_W(Rd, Rn, WZR, LSL, 0)
-#define OP_MOV_REG_X(Rd, Rn) OP_ORR_REG_X(Rd, Rn, XZR, LSL, 0)
+#define OP_MOV_REG_W(Rd, Rn) OP_ORR_REG_W(Rd, (Rn), WZR, LSL, 0)
+#define OP_MOV_REG_X(Rd, Rn) OP_ORR_REG_X(Rd, (Rn), XZR, LSL, 0)
 #define OP_MOVK_W(Rd, imm16, lsl) \
-	(0x72800000 | bits(lsl >> 4, 2, 21) | bits(imm16, 16, 5) | bits(Rd, 5, 0))
+	(0x72800000 | bits((lsl) >> 4, 2, 21) | bits((imm16), 16, 5) | bits((Rd), 5, 0))
 #define OP_MOVK_X(Rd, imm16, lsl) \
-	(0xf2800000 | bits(lsl >> 4, 2, 21) | bits(imm16, 16, 5) | bits(Rd, 5, 0))
+	(0xf2800000 | bits((lsl) >> 4, 2, 21) | bits((imm16), 16, 5) | bits((Rd), 5, 0))
 #define OP_MOVZ_W(Rd, imm16, lsl) \
-	(0x52800000 | bits(lsl >> 4, 2, 21) | bits(imm16, 16, 5) | bits(Rd, 5, 0))
+	(0x52800000 | bits((lsl) >> 4, 2, 21) | bits((imm16), 16, 5) | bits((Rd), 5, 0))
 #define OP_MOVZ_X(Rd, imm16, lsl) \
-	(0xd2800000 | bits(lsl >> 4, 2, 21) | bits(imm16, 16, 5) | bits(Rd, 5, 0))
+	(0xd2800000 | bits((lsl) >> 4, 2, 21) | bits((imm16), 16, 5) | bits((Rd), 5, 0))
 #define OP_ORR_REG_W(Rt, Rn, Rm, shift, imm6)                \
-	(0x2a000000 | bits(shift, 2, 22) | bits(Rm, 5, 16) | \
-	 bits(imm6, 6, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x2a000000 | bits((shift), 2, 22) | bits((Rm), 5, 16) | \
+	 bits((imm6), 6, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_ORR_REG_X(Rt, Rn, Rm, shift, imm6)                \
-	(0xaa000000 | bits(shift, 2, 22) | bits(Rm, 5, 16) | \
-	 bits(imm6, 6, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xaa000000 | bits((shift), 2, 22) | bits((Rm), 5, 16) | \
+	 bits((imm6), 6, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_RET(Rn) \
-	(0xd65f0000 | bits(Rn, 5, 5))
+	(0xd65f0000 | bits((Rn), 5, 5))
 #define OP_STP_POST_W(Rt, Rt2, Rn, imm7) \
-	(0x28800000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x28800000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STP_POST_X(Rt, Rt2, Rn, imm7) \
-	(0xa8800000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xa8800000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STP_PRE_W(Rt, Rt2, Rn, imm7) \
-	(0x29800000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x29800000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STP_PRE_X(Rt, Rt2, Rn, imm7) \
-	(0xa9800000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xa9800000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STP_OFFSET_W(Rt, Rt2, Rn, imm7) \
-	(0x29000000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0x29000000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STP_OFFSET_X(Rt, Rt2, Rn, imm7) \
-	(0xa9000000 | bits(imm7, 7, 15) | bits(Rt2, 5, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xa9000000 | bits((imm7), 7, 15) | bits((Rt2), 5, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STR_POST_W(Rt, Rn, imm9) \
-	(0xb8000400 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xb8000400 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STR_POST_X(Rt, Rn, imm9) \
-	(0xf8000400 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xf8000400 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STR_PRE_W(Rt, Rn, imm9) \
-	(0xb8000c00 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xb8000c00 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STR_PRE_X(Rt, Rn, imm9) \
-	(0xf8000c00 | bits(imm9, 9, 12) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xf8000c00 | bits((imm9), 9, 12) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STR_OFFSET_W(Rt, Rn, imm12) \
-	(0xb9000000 | bits(imm12, 12, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xb9000000 | bits((imm12), 12, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_STR_OFFSET_X(Rt, Rn, imm12) \
-	(0xf9000000 | bits(imm12, 12, 10) | bits(Rn, 5, 5) | bits(Rt, 5, 0))
+	(0xf9000000 | bits((imm12), 12, 10) | bits((Rn), 5, 5) | bits((Rt), 5, 0))
 #define OP_SUBS_REG_W(Rd, Rn, Rm) \
-	(0x6b000000 | bits(Rm, 5, 16) | bits(Rn, 5, 5) | bits(Rd, 5, 0))
+	(0x6b000000 | bits((Rm), 5, 16) | bits((Rn), 5, 5) | bits((Rd), 5, 0))
 #define OP_SUBS_REG_X(Rd, Rn, Rm) \
-	(0xeb000000 | bits(Rm, 5, 16) | bits(Rn, 5, 5) | bits(Rd, 5, 0))
+	(0xeb000000 | bits((Rm), 5, 16) | bits((Rn), 5, 5) | bits((Rd), 5, 0))
 // TODO: OP_SUBS_SHIFTREG and _SXREG (don't want complexity of sign extending in all uses of maths ops)
 
 static reg_t *assemble_prologue(reg_t *ip, int narg, struct operand *op)
