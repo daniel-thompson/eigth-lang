@@ -41,3 +41,5 @@ clean :
 	$(RM) eigth $(OBJS)
 
 $(OBJS) : Makefile $(HDRS)
+
+.PHONY : all bench check clean test
