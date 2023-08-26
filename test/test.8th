@@ -257,7 +257,95 @@ assert	r7, 1
 
 
 ###########
-test	 12	# variables
+test	 12	# <= conditions
+###########
+
+define
+	if<= r0, r1, r2
+begin
+	if r1 <= r2
+		mov r0, 1
+	else
+		mov r0, 2
+	end
+end
+
+if<=	r7, 1, 1
+assert	r7, 1
+if<=	r7, 1, 2
+assert	r7, 1
+if<=	r7, 2, 1
+assert	r7, 2
+
+
+###########
+test	 13	# < conditions
+###########
+
+define
+	if< r0, r1, r2
+begin
+	if r1 < r2
+		mov r0, 1
+	else
+		mov r0, 2
+	end
+end
+
+if< r7, 1, 1
+assert	r7, 2
+if<	r7, 1, 2
+assert	r7, 1
+if<	r7, 2, 1
+assert	r7, 2
+
+
+###########
+test	 14	# >= conditions
+###########
+
+define
+	if>= r0, r1, r2
+begin
+	if r1 >= r2
+		mov r0, 1
+	else
+		mov r0, 2
+	end
+end
+
+if>=	r7, 1, 1
+assert	r7, 1
+if>=	r7, 1, 2
+assert	r7, 2
+if>=	r7, 2, 1
+assert	r7, 1
+
+
+###########
+test	 15	# > conditions
+###########
+
+define
+	if> r0, r1, r2
+begin
+	if r1 > r2
+		mov r0, 1
+	else
+		mov r0, 2
+	end
+end
+
+if> r7, 1, 1
+assert	r7, 2
+if>	r7, 1, 2
+assert	r7, 2
+if>	r7, 2, 1
+assert	r7, 1
+
+
+###########
+test	 16	# variables
 ###########
 
 zero

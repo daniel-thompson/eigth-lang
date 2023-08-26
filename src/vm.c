@@ -234,7 +234,7 @@ reg_t *assemble_if(reg_t *ip, struct compare *cmp, reg_t **fixup)
 		*ip++ = ASM_BGE(cmp->op1.value, cmp->op2.value, 0);
 		break;
 	case GT:
-		*ip++ = ASM_BLT(cmp->op1.value, cmp->op2.value, 0);
+		*ip++ = ASM_BLE(cmp->op1.value, cmp->op2.value, 0);
 		break;
 	case LTEQ:
 		*ip++ = ASM_BGT(cmp->op1.value, cmp->op2.value, 0);
@@ -364,12 +364,12 @@ static reg_t *trace(FILE *f, reg_t *ip)
 		a = F1DECODE(op);
 		b = F2DECODE(op);
 		off = F3DECODE(op);
-		fprintf(f, "\t%s\t%d, %d, %d\n",
+		fprintf(f, "\t%s\t%s, %s, %d\n",
 			(op & OPMASK) == BLT  ? "blt" :
 			(op & OPMASK) == BLTU ? "bltu" :
 			(op & OPMASK) == BGE  ? "bge" :
 						"bgeu",
-			a, b, off);
+			regname(a), regname(b), off);
 		break;
 	case CALL0:
 		trace_symbol(f, "call0", *ip++);
@@ -452,8 +452,8 @@ void exec(reg_t *ip)
 				ip += (int16_t) F3DECODE(op);
 			break;
 		case BLT:
-			if ((int)regs.r[F1DECODE(op)] <
-			    (int)regs.r[F2DECODE(op)])
+			if ((sreg_t)regs.r[F1DECODE(op)] <
+			    (sreg_t)regs.r[F2DECODE(op)])
 				ip += (int16_t) F3DECODE(op);
 			break;
 		case BLTU:
@@ -461,8 +461,8 @@ void exec(reg_t *ip)
 				ip += (int16_t) F3DECODE(op);
 			break;
 		case BGE:
-			if ((int)regs.r[F1DECODE(op)] >=
-			    (int)regs.r[F2DECODE(op)])
+			if ((sreg_t)regs.r[F1DECODE(op)] >=
+			    (sreg_t)regs.r[F2DECODE(op)])
 				ip += (int16_t) F3DECODE(op);
 			break;
 		case BGEU:
