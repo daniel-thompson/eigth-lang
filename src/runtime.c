@@ -252,7 +252,8 @@ static struct operand parse_operand(char *p)
 // Consuming symbols until we reach the end
 void parse_error(void)
 {
-	assert(0);
+	fprintf(stderr, "Parse error - aborting\n");
+	exit(1);
 }
 
 static void parse_operands(struct operand *operand, int n)
