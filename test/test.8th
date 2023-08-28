@@ -392,7 +392,33 @@ const SPACE 32
 mov r0, SPACE
 assert r0, 32
 
-# TODO
+
+###########
+test	 19	# byte arrays
+###########
+
+bytes hexlookup 16
+&hexlookup r0
+stb '0', r0, 0
+stb '1', r0, 1
+stb '2', r0, 2
+stb '3', r0, 3
+stb '4', r0, 4
+stb '5', r0, 5
+stb '6', r0, 6
+stb '7', r0, 7
+stb '8', r0, 8
+stb '9', r0, 9
+stb 'a', r0, 10
+stb 'b', r0, 11
+stb 'c', r0, 12
+stb 'd', r0, 13
+stb 'e', r0, 14
+stb 'f', r0, 15
+ldb r1, r0, 0
+ldb r2, r0, 9
+sub r0, r2, r1
+assert r0, 9
 
 
 ###########

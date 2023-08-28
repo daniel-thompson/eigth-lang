@@ -437,6 +437,47 @@ void parse_if(void)
 
 }
 
+void generate_addressof(const char *opcode, reg_t *val)
+{
+	struct command mov = {
+		.opcode = "mov",
+		.sym = symtab_lookup("mov"),
+		.operand = {
+			{ REGISTER, /* arg0 */ 8 },
+			{ IMMEDIATE, (reg_t) (uintptr_t) val },
+		}
+	};
+
+	char addrop[sizeof(mov.opcode)];
+
+	/* prefix the symbol with & */
+	addrop[0] = '&';
+	strncpy(addrop+1, opcode, sizeof(addrop)-1);
+	addrop[sizeof(addrop)-1] = '\0';
+
+	reg_t *p = ip = memp;
+	ip = assemble_preamble(ip, NULL, 0);
+	ip = assemble_word(ip, &mov);
+	ip = assemble_postamble(ip, NULL, 0);
+	sync_caches(p, ip);
+	memp = ip;
+	(void) symtab_new(addrop, EXECPTR, (reg_t) (uintptr_t) p);
+}
+
+void parse_bytes(void)
+{
+	// a command is not expected right now, instead this is just a sneaky
+	// bit of code reuse to collect a name and number from the input.
+	struct command cmd = parse_command();
+	// TODO: error checking...
+
+	const size_t sz = cmd.operand[0].value;
+	reg_t *r = alloc(sz);
+	memset(r, 0, sz);
+
+	generate_addressof(cmd.opcode, r);
+}
+
 void parse_const(void)
 {
 	// a command is not expected right now, instead this is just a sneaky
@@ -489,18 +530,7 @@ void parse_var(void)
 	memp = ip;
 	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
 
-	/* prefix the symbol with & */
-	memmove(cmd.opcode+1, cmd.opcode, sizeof(cmd.opcode)-2);
-	cmd.opcode[0] = '&';
-	cmd.opcode[sizeof(cmd.opcode)-1] = '\0';
-
-	p = ip = memp;
-	ip = assemble_preamble(ip, NULL, 0);
-	ip = assemble_word(ip, &mov);
-	ip = assemble_postamble(ip, NULL, 0);
-	sync_caches(p, ip);
-	memp = ip;
-	(void) symtab_new(cmd.opcode, EXECPTR, (reg_t) (uintptr_t) p);
+	generate_addressof(cmd.opcode, r);
 }
 
 void parse_while(void)

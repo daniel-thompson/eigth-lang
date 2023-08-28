@@ -25,6 +25,12 @@ static reg_t op_assert(reg_t a, reg_t b)
 	return a;
 }
 
+static reg_t op_bytes(void)
+{
+	parse_bytes();
+	return 0;
+}
+
 static reg_t op_const(void)
 {
 	parse_const();
@@ -72,7 +78,12 @@ static reg_t op_if(reg_t cond)
 	return cond;
 }
 
-static reg_t op_ldw(reg_t _, reg_t a)
+static reg_t op_ldb(reg_t _, reg_t p, reg_t off)
+{
+	return ((uint8_t *) (uintptr_t) p)[off];
+}
+
+static reg_t op_ldw(reg_t _, reg_t p, reg_t off)
 {
 	return ((reg_t *) (uintptr_t) p)[off];
 }
@@ -128,6 +139,18 @@ static reg_t op_shra(reg_t _, reg_t a, reg_t b)
 	return partial | (sb << (31 - b));
 }
 
+static reg_t op_stb(reg_t a, reg_t p, reg_t off)
+{
+	((uint8_t *) (uintptr_t) p)[off] = a;
+	return a;
+}
+
+static reg_t op_stw(reg_t a, reg_t p, reg_t off)
+{
+	((reg_t *) (uintptr_t) p)[off] = a;
+	return a;
+}
+
 static reg_t op_sub(reg_t _, reg_t a, reg_t b)
 {
 	return a - b;
@@ -171,6 +194,7 @@ void register_ops(void)
 	OP(alloc);
 	OP(assert);
 	OP(and);
+	OP(bytes); IMM;
 	OP(const); IMM;
 	OP(define); IMM;
 	OP(disassemble); IMM;
@@ -179,6 +203,7 @@ void register_ops(void)
 	OP(exit);
 	OP(hex);
 	OP(if); IMM;
+	OP(ldb);
 	OP(ldw);
 	OP(mov);
 	OP(mul);
@@ -188,6 +213,8 @@ void register_ops(void)
 	OP(shl);
 	OP(shr);
 	OP(shra);
+	OP(stb);
+	OP(stw);
 	OP(sub);
 	OP(us);
 	OP(var); IMM;
