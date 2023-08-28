@@ -148,11 +148,35 @@ static char *token(char *p, size_t sz)
 
 	skip_whitespace();
 
-	while (!is_seperator((c = getchar()))) {
-		if (q == r)
-			break;
+	c = getchar();
+	if (c == '"') {
+		while ((c = getchar()) != '"') {
+			if (q == r)
+				q--;
 
-		*q++ = c;
+			*q++ = c;
+
+			// handle escapes
+			if (c == '\\') {
+				switch (c = getchar()) {
+				case '"':
+					q[-1] = '"';
+					break;
+				default:
+					ungetc(c, stdin);
+				}
+			}
+		}
+
+		// pull a character so we have something to ungetc()
+		c = getchar();
+	} else if (!is_seperator(c)) {
+		do {
+			if (q == r)
+				q--;
+
+			*q++ = c;
+		} while (!is_seperator(c = getchar()));
 	}
 
 	*q = '\0';
@@ -502,6 +526,17 @@ void parse_const(void)
 	(void) symtab_new(cmd.opcode, CONSTANT, cmd.operand[0].value);
 }
 
+void parse_string(void)
+{
+	char sym[32];
+
+	token(sym, sizeof(sym));
+	char *t = (char *) token((char *) memp, 4096);
+	reg_t *r = alloc(strlen(t) + 1);
+	assert((void *) t == (void *) r);
+
+	generate_addressof(sym, r);
+}
 
 void parse_var(void)
 {

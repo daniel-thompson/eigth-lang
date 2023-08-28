@@ -123,6 +123,13 @@ static reg_t op_putc(reg_t a)
 	return a;
 }
 
+static reg_t op_puts(reg_t a)
+{
+	printf("%s", (char *) (uintptr_t) a);
+
+	return a;
+}
+
 static reg_t op_shl(reg_t _, reg_t a, reg_t b)
 {
 	return a << b;
@@ -149,6 +156,12 @@ static reg_t op_stb(reg_t a, reg_t p, reg_t off)
 {
 	((uint8_t *) (uintptr_t) p)[off] = a;
 	return a;
+}
+
+static reg_t op_string(void)
+{
+	parse_string();
+	return 0;
 }
 
 static reg_t op_stw(reg_t a, reg_t p, reg_t off)
@@ -217,10 +230,12 @@ void register_ops(void)
 	OP(or);
 	OP(print);
 	OP(putc);
+	OP(puts);
 	OP(shl);
 	OP(shr);
 	OP(shra);
 	OP(stb);
+	OP(string); IMM;
 	OP(stw);
 	OP(sub);
 	OP(us);

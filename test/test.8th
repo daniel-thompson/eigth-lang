@@ -2,17 +2,17 @@
 
 const QUIET 1
 
+string TEST "Test "
+
 define
 	test	r7
+  use r6
 begin
   if QUIET
     putc  '.'
   else
-	  putc	'T'
-	  putc	'e'
-	  putc	's'
-	  putc	't'
-	  putc	32
+    &TEST r6
+    puts r6
 	  print	r7
   end
 end

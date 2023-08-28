@@ -115,6 +115,7 @@ void parse_bytes(void);
 void parse_const(void);
 void parse_define(void);
 void parse_if(void);
+void parse_string(void);
 void parse_var(void);
 void parse_while(void);
 void symtab_add(struct symbol *s);
