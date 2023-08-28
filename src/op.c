@@ -74,8 +74,7 @@ static reg_t op_if(reg_t cond)
 
 static reg_t op_ldw(reg_t _, reg_t a)
 {
-	reg_t *p = (reg_t *) (uintptr_t) a;
-	return *p;
+	return ((reg_t *) (uintptr_t) p)[off];
 }
 
 static reg_t op_mov(reg_t _, reg_t a)
