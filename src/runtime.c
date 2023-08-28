@@ -464,6 +464,20 @@ void generate_addressof(const char *opcode, reg_t *val)
 	(void) symtab_new(addrop, EXECPTR, (reg_t) (uintptr_t) p);
 }
 
+void parse_array(void)
+{
+	// a command is not expected right now, instead this is just a sneaky
+	// bit of code reuse to collect a name and number from the input.
+	struct command cmd = parse_command();
+	// TODO: error checking...
+
+	const size_t sz = cmd.operand[0].value * sizeof(reg_t);
+	reg_t *r = alloc(sz);
+	memset(r, 0, sz);
+
+	generate_addressof(cmd.opcode, r);
+}
+
 void parse_bytes(void)
 {
 	// a command is not expected right now, instead this is just a sneaky

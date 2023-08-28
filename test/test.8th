@@ -422,7 +422,25 @@ assert r0, 9
 
 
 ###########
-test	 19	# exit (and symbol re-definition, see definition of exit at top)
+test	 20	# word arrays
+###########
+
+array test20 2
+&test20 r0
+ldw r1, r0, 0
+ldw r2, r0, 1
+assert r1, 0
+assert 0, r2
+stw 0x76543210, r0, 0
+stw 0xfedcba98, r0, 1
+ldw r1, r0, 0
+ldw r2, r0, 1
+assert r1, 0x76543210
+assert r2, 0xfedcba98,
+
+
+###########
+test	 21	# exit (and symbol re-definition, see definition of exit at top)
 ###########
 
 exit  0

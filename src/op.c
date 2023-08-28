@@ -25,6 +25,12 @@ static reg_t op_assert(reg_t a, reg_t b)
 	return a;
 }
 
+static reg_t op_array(void)
+{
+	parse_array();
+	return 0;
+}
+
 static reg_t op_bytes(void)
 {
 	parse_bytes();
@@ -194,6 +200,7 @@ void register_ops(void)
 	OP(alloc);
 	OP(assert);
 	OP(and);
+	OP(array); IMM;
 	OP(bytes); IMM;
 	OP(const); IMM;
 	OP(define); IMM;
