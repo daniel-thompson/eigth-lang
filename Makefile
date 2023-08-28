@@ -17,7 +17,7 @@ A64=1
 endif
 
 SRCS = $(wildcard src/*.c)
-ifdef A64
+ifeq ($(A64),1)
 SRCS := $(subst src/vm.c,src/arm/a64.c,$(SRCS))
 endif
 
