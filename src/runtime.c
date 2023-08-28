@@ -464,29 +464,15 @@ void parse_if(void)
 
 void generate_addressof(const char *opcode, reg_t *val)
 {
-	struct command mov = {
-		.opcode = "mov",
-		.sym = symtab_lookup("mov"),
-		.operand = {
-			{ REGISTER, /* arg0 */ 8 },
-			{ IMMEDIATE, (reg_t) (uintptr_t) val },
-		}
-	};
-
-	char addrop[sizeof(mov.opcode)];
+	struct command cmd;
+	char addrop[sizeof(cmd.opcode)];
 
 	/* prefix the symbol with & */
 	addrop[0] = '&';
 	strncpy(addrop+1, opcode, sizeof(addrop)-1);
 	addrop[sizeof(addrop)-1] = '\0';
 
-	reg_t *p = ip = memp;
-	ip = assemble_preamble(ip, NULL, 0);
-	ip = assemble_word(ip, &mov);
-	ip = assemble_postamble(ip, NULL, 0);
-	sync_caches(p, ip);
-	memp = ip;
-	(void) symtab_new(addrop, EXECPTR, (reg_t) (uintptr_t) p);
+	(void) symtab_new(addrop, CONSTANT, (reg_t) (uintptr_t) val);
 }
 
 void parse_array(void)

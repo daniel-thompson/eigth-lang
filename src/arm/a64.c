@@ -171,8 +171,7 @@ static reg_t *assemble_prologue(reg_t *ip, int narg, struct operand *op)
 	case IMMEDIATE:
 		*ip++ = OP_MOV_IMM_W(ARG(narg), op->value & 0xffff);
 		if (op->value >> 16)
-			*ip++ = OP_MOVK_W(ARG(narg),
-					   (op->value >> 16) & 0xffff, 16);
+			*ip++ = OP_MOVK_W(ARG(narg), op->value >> 16, 16);
 		break;
 	case ARGUMENT:
 	case INVALID:
@@ -194,6 +193,17 @@ static reg_t *assemble_epilogue(reg_t *ip, struct operand *op)
 reg_t *assemble_word(reg_t *ip, struct command *word)
 {
 	int narg;
+
+	if (word->sym->type == CONSTANT) {
+		reg_t reg = REG(word->operand[0].value);
+		reg_t value = word->sym->val;
+
+		*ip++ = OP_MOV_IMM_W(reg, value & 0xffff);
+		if (value >> 16)
+			*ip++ = OP_MOVK_W(reg, value >> 16, 16);
+
+		return ip;
+	}
 
 	assert(word->sym->type == FUNCPTR || word->sym->type == WORDPTR ||
 	       word->sym->type == EXECPTR);
