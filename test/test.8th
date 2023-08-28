@@ -366,14 +366,14 @@ test	 16	# variables
 ###########
 
 zero
-var	pi 3
+var	three 3
 
-pi	r0
+three	r0
 assert	r0, 3
 
-&pi r0
+&three r0
 ldw r0, r0, 0
-pi r1
+three r1
 assert r0, r1
 
 
@@ -381,7 +381,10 @@ assert r0, r1
 test	 17	# modifying variables
 ###########
 
-# TODO
+&three r0
+stw 4, r0, 0
+three r1
+assert r1, 4
 
 
 ###########
